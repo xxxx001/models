@@ -42,7 +42,7 @@ class ZeroOutOp : public OpKernel {
     // Create an output tensor
     Tensor* output_tensor = NULL;
 
-	OP_REQUIRES(context, TensorShapeUtils::IsVector(input_tensor.shape()),
+	OP_REQUIRES(context, TensorShapeUtils::IsScalar(input_tensor.shape()),
                 errors::InvalidArgument("ZeroOut expects a 1-D vector."));
 	
     OP_REQUIRES_OK(context, context->allocate_output(0, input_tensor.shape(),
