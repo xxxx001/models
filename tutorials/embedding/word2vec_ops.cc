@@ -181,7 +181,7 @@ class ZeroOutOp : public OpKernel {
     if (N > 0) output_flat(0) = input(0);
 
 	 // Preserve the requested input value
-    output_flat(preserve_index_) = input(preserve_index_);
+   // output_flat(preserve_index_) = input(preserve_index_);
 
 	
   }
