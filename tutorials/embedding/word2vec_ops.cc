@@ -51,7 +51,12 @@ class ZeroOutOp : public OpKernel {
     OP_REQUIRES(context, preserve_index_ >= 0,
                 errors::InvalidArgument("Need preserve_index >= 0, got ",
                                         preserve_index_));
-	
+
+	// We're using saved attr to validate potentially dynamic input
+    // So we check that preserve_index is in range
+    OP_REQUIRES(context, preserve_index_ < input.dimension(0),
+                errors::InvalidArgument("preserve_index out of range"));
+										 
     OP_REQUIRES_OK(context, context->allocate_output(0, input_tensor.shape(),
                                                      &output_tensor));
     auto output_flat = output_tensor->flat<int32>();
@@ -64,6 +69,11 @@ class ZeroOutOp : public OpKernel {
 
     // Preserve the first input value if possible.
     if (N > 0) output_flat(0) = input(0);
+
+	 // Preserve the requested input value
+    output_flat(preserve_index_) = input(preserve_index_);
+
+	
   }
   private:
      int preserve_index_;
