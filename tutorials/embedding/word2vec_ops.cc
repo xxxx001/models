@@ -23,6 +23,7 @@ namespace tensorflow {
 
 REGISTER_OP("ZeroOut")
     .Input("to_zero: int32")
+    .Attr("preserve_index: int")    //添加属性
     .Output("zeroed: int32")
     .SetShapeFn([](::tensorflow::shape_inference::InferenceContext* c) {
       c->set_output(0, c->input(0));
@@ -42,8 +43,14 @@ class ZeroOutOp : public OpKernel {
     // Create an output tensor
     Tensor* output_tensor = NULL;
 
-	OP_REQUIRES(context, TensorShapeUtils::IsScalar(input_tensor.shape()),
-                errors::InvalidArgument("ZeroOut expects a 1-D vector."));
+	// Get the index of the value to preserve
+    OP_REQUIRES_OK(context,
+                   context->GetAttr("preserve_index", &preserve_index_));
+
+				    // Check that preserve_index is positive
+    OP_REQUIRES(context, preserve_index_ >= 0,
+                errors::InvalidArgument("Need preserve_index >= 0, got ",
+                                        preserve_index_));
 	
     OP_REQUIRES_OK(context, context->allocate_output(0, input_tensor.shape(),
                                                      &output_tensor));
@@ -58,6 +65,8 @@ class ZeroOutOp : public OpKernel {
     // Preserve the first input value if possible.
     if (N > 0) output_flat(0) = input(0);
   }
+  private:
+     int preserve_index_;
 };
 
 REGISTER_KERNEL_BUILDER(Name("ZeroOut").Device(DEVICE_CPU), ZeroOutOp);
