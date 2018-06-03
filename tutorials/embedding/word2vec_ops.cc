@@ -41,6 +41,10 @@ class ZeroOutOp : public OpKernel {
 
     // Create an output tensor
     Tensor* output_tensor = NULL;
+
+	OP_REQUIRES(context, TensorShapeUtils::IsVector(input_tensor.shape()),
+                errors::InvalidArgument("ZeroOut expects a 1-D vector."));
+	
     OP_REQUIRES_OK(context, context->allocate_output(0, input_tensor.shape(),
                                                      &output_tensor));
     auto output_flat = output_tensor->flat<int32>();
@@ -76,7 +80,6 @@ REGISTER_OP("SkipgramWord2vec")
     .Attr("subsample: float = 1e-3")
     .Doc(R"doc(
 Parses a text file and creates a batch of examples.
-
 vocab_word: A vector of words in the corpus.
 vocab_freq: Frequencies of words. Sorted in the non-ascending order.
 words_per_epoch: Number of words per epoch in the data file.
@@ -104,7 +107,6 @@ REGISTER_OP("NegTrainWord2vec")
     .Attr("num_negative_samples: int")
     .Doc(R"doc(
 Training via negative sampling.
-
 w_in: input word embedding.
 w_out: output word embedding.
 examples: A vector of word ids.
