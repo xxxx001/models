@@ -29,7 +29,7 @@ REGISTER_OP("ZeroOut")
       return Status::OK();
     });
 
-	REGISTER_OP("ZeroOut1")
+REGISTER_OP("ZeroOut1")
     .Input("to_zero: int32")  
     .Attr("preserve_index: int") 
     .Output("zeroed: int32")
@@ -38,7 +38,7 @@ REGISTER_OP("ZeroOut")
       return Status::OK();
     });
 
-	REGISTER_OP("ZeroOut2")
+REGISTER_OP("ZeroOut2")
 		.Attr("T: realnumbertype")
 		.Input("to_zero: T")
 		.Output("zeroed: T")
@@ -49,7 +49,7 @@ REGISTER_OP("ZeroOut")
 	)doc");
 
 
-	template <typename T>
+template <typename T>
 	class ZeroOutOp2 : public OpKernel {
 	 public:
 	  explicit ZeroOutOp2(OpKernelConstruction* context) : OpKernel(context) {}
