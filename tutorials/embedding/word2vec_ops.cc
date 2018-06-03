@@ -22,18 +22,77 @@ limitations under the License.
 namespace tensorflow {
 
 REGISTER_OP("ZeroOut")
-    .Input("to_zero: int32")
-    .Attr("preserve_index: int")    //添加属性
+    .Input("to_zero: int32")   
     .Output("zeroed: int32")
     .SetShapeFn([](::tensorflow::shape_inference::InferenceContext* c) {
       c->set_output(0, c->input(0));
       return Status::OK();
     });
 
+	REGISTER_OP("ZeroOut1")
+    .Input("to_zero: int32")  
+    .Attr("preserve_index: int") 
+    .Output("zeroed: int32")
+    .SetShapeFn([](::tensorflow::shape_inference::InferenceContext* c) {
+      c->set_output(0, c->input(0));
+      return Status::OK();
+    });
 
-class ZeroOutOp : public OpKernel {
+	REGISTER_OP("ZeroOut2")
+		.Attr("T: realnumbertype")
+		.Input("to_zero: T")
+		.Output("zeroed: T")
+		.Doc(R"doc(
+	Zeros out all but the first value of a Tensor.
+	zeroed: A Tensor whose first value is identical to `to_zero`, and 0
+	  otherwise.
+	)doc");
+
+
+	template <typename T>
+	class ZeroOutOp2 : public OpKernel {
+	 public:
+	  explicit ZeroOutOp2(OpKernelConstruction* context) : OpKernel(context) {}
+	
+	  void Compute(OpKernelContext* context) override {
+		// Grab the input tensor
+		const Tensor& input_tensor = context->input(0);
+		auto input = input_tensor.flat<T>();
+	
+		// Create an output tensor
+		Tensor* output = nullptr;
+		OP_REQUIRES_OK(context,
+					   context->allocate_output(0, input_tensor.shape(), &output));
+		auto output_flat = output->template flat<T>();
+	
+		// Set all the elements of the output tensor to 0
+		const int N = input.size();
+		for (int i = 0; i < N; i++) {
+		  output_flat(i) = T(0);
+		}
+	
+		// Preserve the first input value
+		if (N > 0) output_flat(0) = input(0);
+	  }
+	};
+	
+
+#define REGISTER_KERNEL(type)                                       \
+	  REGISTER_KERNEL_BUILDER(											\
+		  Name("ZeroOut2").Device(DEVICE_CPU).TypeConstraint<type>("T"), \
+		  ZeroOutOp2<type>)
+	
+	REGISTER_KERNEL(float);
+	REGISTER_KERNEL(double);
+	REGISTER_KERNEL(int32);
+	
+#undef REGISTER_KERNEL
+
+
+
+class ZeroOutOp1 : public OpKernel {
  public:
-  explicit ZeroOutOp(OpKernelConstruction* context) : OpKernel(context) {
+  explicit ZeroOutOp1(OpKernelConstruction* context) : OpKernel(context) {
 
   // Get the index of the value to preserve
     OP_REQUIRES_OK(context,
@@ -61,6 +120,51 @@ class ZeroOutOp : public OpKernel {
     OP_REQUIRES(context, preserve_index_ >= 0,
                 errors::InvalidArgument("Need preserve_index >= 0, got ",
                                         preserve_index_));
+
+	// We're using saved attr to validate potentially dynamic input
+    // So we check that preserve_index is in range
+    OP_REQUIRES(context, preserve_index_ < input.dimension(0),
+                errors::InvalidArgument("preserve_index out of range"));
+										 
+    OP_REQUIRES_OK(context, context->allocate_output(0, input_tensor.shape(),
+                                                     &output_tensor));
+    auto output_flat = output_tensor->flat<int32>();
+
+    // Set all but the first element of the output tensor to 0.
+    const int N = input.size();
+    for (int i = 1; i < N; i++) {
+      output_flat(i) = 0;
+    }
+
+    // Preserve the first input value if possible.
+    if (N > 0) output_flat(0) = input(0);
+
+	 // Preserve the requested input value
+    output_flat(preserve_index_) = input(preserve_index_);
+
+	
+  }
+  private:
+     int preserve_index_;
+};
+
+REGISTER_KERNEL_BUILDER(Name("ZeroOut1").Device(DEVICE_CPU), ZeroOutOp1);
+
+
+class ZeroOutOp : public OpKernel {
+ public:
+  explicit ZeroOutOp(OpKernelConstruction* context) : OpKernel(context) {
+
+  // Get the index of the value to preserve   
+  }
+
+  void Compute(OpKernelContext* context) override {
+    // Grab the input tensor
+    const Tensor& input_tensor = context->input(0);
+    auto input = input_tensor.flat<int32>();
+
+    // Create an output tensor
+    Tensor* output_tensor = NULL;
 
 	// We're using saved attr to validate potentially dynamic input
     // So we check that preserve_index is in range
