@@ -165,9 +165,7 @@ class ZeroOutOp : public OpKernel {
     Tensor* output_tensor = NULL;
 
 	// We're using saved attr to validate potentially dynamic input
-    // So we check that preserve_index is in range
-    OP_REQUIRES(context, preserve_index_ < input.dimension(0),
-                errors::InvalidArgument("preserve_index out of range"));
+    // So we check that preserve_index is in range  
 										 
     OP_REQUIRES_OK(context, context->allocate_output(0, input_tensor.shape(),
                                                      &output_tensor));
