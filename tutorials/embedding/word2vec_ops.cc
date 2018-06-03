@@ -50,7 +50,7 @@ REGISTER_OP("ZeroOut2")
 
 
 template <typename T>
-	class ZeroOutOp2 : public OpKernel {
+class ZeroOutOp2 : public OpKernel {
 	 public:
 	  explicit ZeroOutOp2(OpKernelConstruction* context) : OpKernel(context) {}
 	
@@ -145,8 +145,8 @@ class ZeroOutOp1 : public OpKernel {
 
 	
   }
-//  private:
-//     int preserve_index_;
+  private:
+     int preserve_index_;
 };
 
 REGISTER_KERNEL_BUILDER(Name("ZeroOut1").Device(DEVICE_CPU), ZeroOutOp1);
@@ -190,8 +190,8 @@ class ZeroOutOp : public OpKernel {
 
 	
   }
-  private:
-     int preserve_index_;
+//  private:
+//     int preserve_index_;
 };
 
 REGISTER_KERNEL_BUILDER(Name("ZeroOut").Device(DEVICE_CPU), ZeroOutOp);
