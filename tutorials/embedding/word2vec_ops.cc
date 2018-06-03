@@ -31,7 +31,8 @@ REGISTER_OP("ZeroOut")
 
 /**
   expend ..
-static ::tensorflow::register_op::OpDefBuilderReceiver register_op0 __attribute__((unused)) = ::tensorflow::register_op::OpDefBuilderWrapper<true>("ZeroOut")
+static ::tensorflow::register_op::OpDefBuilderReceiver 
+     register_op0 __attribute__((unused)) = ::tensorflow::register_op::OpDefBuilderWrapper<true>("ZeroOut")
     .Input("to_zero: int32")
     .Output("zeroed: int32")
     .SetShapeFn([](::tensorflow::shape_inference::InferenceContext* c) {
@@ -51,7 +52,8 @@ REGISTER_OP("ZeroOut1")
     });
 /*
 expend ...
-static ::tensorflow::register_op::OpDefBuilderReceiver register_op1 __attribute__((unused)) = ::tensorflow::register_op::OpDefBuilderWrapper<true>("ZeroOut1")
+static ::tensorflow::register_op::OpDefBuilderReceiver
+      register_op1 __attribute__((unused)) = ::tensorflow::register_op::OpDefBuilderWrapper<true>("ZeroOut1")
     .Input("to_zero: int32")
     .Attr("preserve_index: int")
     .Output("zeroed: int32")
@@ -73,7 +75,8 @@ REGISTER_OP("ZeroOut2")
 
 /*
 expend ...
-static ::tensorflow::register_op::OpDefBuilderReceiver register_op2 __attribute__((unused)) = ::tensorflow::register_op::OpDefBuilderWrapper<true>("ZeroOut2")
+static ::tensorflow::register_op::OpDefBuilderReceiver
+      register_op2 __attribute__((unused)) = ::tensorflow::register_op::OpDefBuilderWrapper<true>("ZeroOut2")
   .Attr("T: realnumbertype")
   .Input("to_zero: T")
   .Output("zeroed: T")
@@ -123,7 +126,8 @@ class ZeroOutOp2 : public OpKernel {
 
 
   Tensor* output = nullptr;
-  do { ::tensorflow::Status _s(context->allocate_output(0, input_tensor.shape(), &output)); if (!(__builtin_expect(!!(_s.ok()), 1))) { (context)->CtxFailureWithWarning(
+  do { ::tensorflow::Status _s(context->allocate_output(0, input_tensor.shape(), &output)); 
+     if (!(__builtin_expect(!!(_s.ok()), 1))) { (context)->CtxFailureWithWarning(
  "word2vec_ops.cc"
 # 64 "word2vec_ops.cc"
   ,
@@ -160,12 +164,34 @@ class ZeroOutOp2 : public OpKernel {
 /*
   expend ...
 
- constexpr bool should_register_3__flag = true; static ::tensorflow::kernel_factory::OpKernelRegistrar registrar__body__3__object( should_register_3__flag ? ::tensorflow::register_kernel::Name("ZeroOut2").Device(DEVICE_CPU).TypeConstraint<float>("T").Build() : nullptr, "ZeroOutOp2<float>", [](::tensorflow::OpKernelConstruction* context) -> ::tensorflow::OpKernel* { return new ZeroOutOp2<float>(context); });;
+ constexpr bool should_register_3__flag = true;
+ static ::tensorflow::kernel_factory::OpKernelRegistrar
+    registrar__body__3__object( should_register_3__flag ? ::tensorflow::register_kernel::Name("ZeroOut2")
+          .Device(DEVICE_CPU)
+          .TypeConstraint<float>("T").Build() : nullptr, "ZeroOutOp2<float>", []
+          (::tensorflow::OpKernelConstruction* context) -> ::tensorflow::OpKernel* { 
+          return new ZeroOutOp2<float>(context);
+       });;
 
 
- constexpr bool should_register_4__flag = true; static ::tensorflow::kernel_factory::OpKernelRegistrar registrar__body__4__object( should_register_4__flag ? ::Tensorflow::register_kernel::Name("ZeroOut2").Device(DEVICE_CPU).TypeConstraint<double>("T").Build() : nullptr, "ZeroOutOp2<double>", [](::tensorflow::OpKernelConstruction* context) -> ::tensorflow::OpKernel* { return new ZeroOutOp2<double>(context); });;
+ constexpr bool should_register_4__flag = true; 
+ static ::tensorflow::kernel_factory::OpKernelRegistrar 
+      registrar__body__4__object( should_register_4__flag ? ::Tensorflow::register_kernel::Name("ZeroOut2")
+      .Device(DEVICE_CPU)
+      .TypeConstraint<double>("T").Build() : nullptr,
+      "ZeroOutOp2<double>", [](::tensorflow::OpKernelConstruction* context) -> ::tensorflow::OpKernel* {
+      return new ZeroOutOp2<double>(context);
+      });;
 
- constexpr bool should_register_5__flag = true; static ::tensorflow::kernel_factory::OpKernelRegistrar registrar__body__5__object( should_register_5__flag ? ::orflow::register_kernelensorflow::register_kernel::Name("ZeroOut2").Device(DEVICE_CPU).TypeConstraint<int32>("T").Build() : nullptr, "ZeroOutOp2<int32>", [](::tensorflow::OpKernelConstruction* context) -> ::tensorflow::OpKernel* { return new ZeroOutOp2<int32>(context); });;
+ constexpr bool should_register_5__flag = true;
+ static ::tensorflow::kernel_factory::OpKernelRegistrar 
+ registrar__body__5__object( should_register_5__flag ? ::orflow::register_kernelensorflow::
+     register_kernel::Name("ZeroOut2")
+ .Device(DEVICE_CPU)
+ .TypeConstraint<int32>("T").Build() : nullptr, "ZeroOutOp2<int32>",
+    [](::tensorflow::OpKernelConstruction* context) -> ::tensorflow::OpKernel* { 
+ return new ZeroOutOp2<int32>(context);
+ });;
 
 */
 
@@ -229,7 +255,13 @@ REGISTER_KERNEL_BUILDER(Name("ZeroOut1").Device(DEVICE_CPU), ZeroOutOp1);
 
 /*
 expend ...
-constexpr bool should_register_6__flag = true; static ::tensorflow::kernel_factory::OpKernelRegistrar registrar__body__6__object( should_register_6__flag ? ::tensorflow::register_kernel::Name("ZeroOut1").Device(DEVICE_CPU).Build() : nullptr, "ZeroOutOp1", [](::tensorflow::OpKernelConstruction* context) -> ::tensorflow::OpKernel* { return new ZeroOutOp1(context); });;
+constexpr bool should_register_6__flag = true;
+static ::tensorflow::kernel_factory::OpKernelRegistrar 
+registrar__body__6__object( should_register_6__flag ? ::tensorflow::register_kernel::Name("ZeroOut1")
+.Device(DEVICE_CPU).Build() : nullptr, "ZeroOutOp1",
+[](::tensorflow::OpKernelConstruction* context) -> ::tensorflow::OpKernel* {
+return new ZeroOutOp1(context);
+});;
 
 */
 
@@ -287,7 +319,8 @@ class ZeroOutOp : public OpKernel {
     const Tensor& input_tensor = context->input(0);
     auto input = input_tensor.flat<int32>();
     Tensor* output_tensor = __null;
-    do { ::tensorflow::Status _s(context->allocate_output(0, input_tensor.shape(), &output_tensor)); if (!(__builtin_expect(!!(_s.ok()), 1))) { (context)->CtxFailureWithWarning(
+    do { ::tensorflow::Status _s(context->allocate_output(0, input_tensor.shape(), &output_tensor)); 
+    if (!(__builtin_expect(!!(_s.ok()), 1))) { (context)->CtxFailureWithWarning(
  "word2vec_ops.cc"
 # 170 "word2vec_ops.cc"
     ,
@@ -310,7 +343,12 @@ REGISTER_KERNEL_BUILDER(Name("ZeroOut").Device(DEVICE_CPU), ZeroOutOp);
 
 /*
 expend ...
-constexpr bool should_register_7__flag = true; static ::tensorflow::kernel_factory::OpKernelRegistrar registrar__body__7__object( should_register_7__flag ? ::tensorflow::register_kernel::Name("ZeroOut").Device(DEVICE_CPU).Build() : nullptr, "ZeroOutOp", [](::tensorflow::OpKernelConstruction* context) -> ::tensorflow::OpKernel* { return new ZeroOutOp(context); });;
+constexpr bool should_register_7__flag = true;
+static ::tensorflow::kernel_factory::OpKernelRegistrar 
+registrar__body__7__object( should_register_7__flag ? ::tensorflow::register_kernel::Name("ZeroOut")
+.Device(DEVICE_CPU).Build() : nullptr, "ZeroOutOp",
+[](::tensorflow::OpKernelConstruction* context) -> ::tensorflow::OpKernel* {
+return new ZeroOutOp(context); });;
 
 */
 
