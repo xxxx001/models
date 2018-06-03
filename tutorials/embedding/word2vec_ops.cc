@@ -49,7 +49,7 @@ REGISTER_OP("ZeroOut2")
 	)doc");
 
 
-	template <typename T>
+template <typename T>
 	class ZeroOutOp2 : public OpKernel {
 	 public:
 	  explicit ZeroOutOp2(OpKernelConstruction* context) : OpKernel(context) {}
