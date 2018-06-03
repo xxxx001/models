@@ -33,7 +33,17 @@ REGISTER_OP("ZeroOut")
 
 class ZeroOutOp : public OpKernel {
  public:
-  explicit ZeroOutOp(OpKernelConstruction* context) : OpKernel(context) {}
+  explicit ZeroOutOp(OpKernelConstruction* context) : OpKernel(context) {
+
+  // Get the index of the value to preserve
+    OP_REQUIRES_OK(context,
+                   context->GetAttr("preserve_index", &preserve_index_));
+
+				    // Check that preserve_index is positive
+    OP_REQUIRES(context, preserve_index_ >= 0,
+                errors::InvalidArgument("Need preserve_index >= 0, got ",
+                                        preserve_index_));
+  }
 
   void Compute(OpKernelContext* context) override {
     // Grab the input tensor
